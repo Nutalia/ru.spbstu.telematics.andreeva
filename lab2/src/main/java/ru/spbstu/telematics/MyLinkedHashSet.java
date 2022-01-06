@@ -2,7 +2,6 @@ package ru.spbstu.telematics;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.LinkedHashSet;
 
 public class MyLinkedHashSet<E> {
 	
@@ -167,8 +166,6 @@ public class MyLinkedHashSet<E> {
 		{
 			int newCapacity = 2*capacity;
 			Node<E>[] newTable = new Node[newCapacity];
-			Node<E> newHead = new Node(null,null,null,null);
-			Node<E> newTail = new Node(null,newHead, null, null);
 			Node<E> curr = head.getNext();
 			while(curr.getNext() != null)
 			{
@@ -177,7 +174,8 @@ public class MyLinkedHashSet<E> {
 					hash = curr.hash() & (newCapacity - 1);
 				if(newTable[hash] == null)
 				{
-					newTable[hash] = new Node(curr.getData(),newTail.getPrev(),newTail,null);
+					curr.setTNext(null);
+					newTable[hash] = curr;
 				}
 				else
 				{
@@ -188,15 +186,13 @@ public class MyLinkedHashSet<E> {
 						par = sub_curr;
 						sub_curr = sub_curr.getTNext();
 					}
-					sub_curr = new Node(curr.getData(),newTail.getPrev(),newTail,null);
-					par.setTNext(sub_curr);
+					curr.setTNext(null);
+					par.setTNext(curr);
 				}
 				curr = curr.getNext();
 			}
 			table = newTable;
 			capacity = newCapacity;
-			head = newHead;
-			tail = newTail;
 		}
 	}
 	
